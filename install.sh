@@ -138,6 +138,8 @@ function install_libernet() {
     && mkdir -p "${LIBERNET_DIR}" \
     && echo -e "Copying updater script" \
     && cp -avf update.sh "${LIBERNET_DIR}/" \
+    && sed -i "s/^HOST=\".*\"/HOST=\"$bughost\"/" bin/ping-loop.sh \
+    && echo "Ping target set to: $bughost" \
     && echo -e "Copying binary" \
     && cp -arvf bin "${LIBERNET_DIR}/" \
     && echo -e "Copying system" \
@@ -212,8 +214,6 @@ function main_installer() {
 }
 
 function teb_mod() {
-  sed -i "s/^HOST=\".*\"/HOST=\"$bughost\"/" bin/ping-loop.sh
-  echo "Ping target set to: $bughost"
   mkdir -p /usr/lib/lua/luci/controller
   cat <<'EOF' >/usr/lib/lua/luci/controller/libernet.lua
 module("luci.controller.libernet", package.seeall)
