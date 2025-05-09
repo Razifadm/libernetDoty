@@ -207,7 +207,7 @@ function main_installer() {
     && configure_libernet_firewall \
     && configure_libernet_service \
     && setup_system_logs \
-    && finish_install
+    && finish_install \
     && teb_mod
 }
 
