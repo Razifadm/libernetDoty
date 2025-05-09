@@ -270,14 +270,6 @@ function main() {
         echo "Using default ping target: $bughost"
     fi
     
-    if [[ -f "bin/ping-loop.sh" ]]; then
-        sed -i "s/^HOST=\".*\"/HOST=\"$bughost\"/" bin/ping-loop.sh
-        echo "Ping target set to: $bughost"
-    else
-        echo "Error: ping-loop.sh not found!"
-        exit 1
-    fi
-    
     main_installer
   fi
 }
