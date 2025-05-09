@@ -12,7 +12,7 @@ fi
 SERVICE_NAME="PING loop"
 SYSTEM_CONFIG="${LIBERNET_DIR}/system/config.json"
 INTERVAL="3"
-HOST="bing.com"
+HOST=""
 
 function http_ping() {
   httping -qi "${INTERVAL}" -t "${INTERVAL}" "${HOST}"
