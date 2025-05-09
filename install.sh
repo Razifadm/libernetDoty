@@ -172,8 +172,7 @@ function configure_libernet_firewall() {
       && uci add firewall forwarding \
       && uci set firewall.@forwarding[-1].src='lan' \
       && uci set firewall.@forwarding[-1].dest='libernet' \
-      && uci commit \
-      && /etc/init.d/network restart
+      && uci commit
   fi
 }
 
@@ -210,7 +209,24 @@ function main_installer() {
     && configure_libernet_service \
     && setup_system_logs \
     && finish_install \
-    && teb_mod
+    && teb_mod \
+    && restart_net
+}
+
+function restart_net() {
+# Prompt user for network restart
+read -p "Restart network now? (Default: Yes) [Y/n] " response
+
+# Convert response to lowercase for case-insensitive comparison
+response_lower=${response,,}
+
+# If empty (user pressed Enter) or 'y', restart network
+if [[ -z "$response" || "$response_lower" == "y" ]]; then
+    echo "Restarting network..."
+    /etc/init.d/network restart
+else
+    echo "Skipping network restart."
+fi
 }
 
 function teb_mod() {
