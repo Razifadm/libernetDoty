@@ -9,8 +9,7 @@ jq
 ip-full
 kmod-tun
 openssh-client
-shadowsocks-libev-ss-local
-dnsmasq
+dnsmasq-full
 stubby
 php8
 php8-cgi
