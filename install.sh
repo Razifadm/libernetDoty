@@ -16,7 +16,7 @@ LIBERNET_WWW="/www/libernet"
 STATUS_LOG="${LIBERNET_DIR}/log/status.log"
 DOWNLOADS_DIR="${HOME}/Downloads"
 LIBERNET_TMP="${DOWNLOADS_DIR}/libernet"
-REPOSITORY_URL="https://github.com/BootLoopLover/libernet"
+REPOSITORY_URL="https://github.com/dotywrt/libernet"
 
 function install_packages() {
   while IFS= read -r line; do
@@ -33,7 +33,7 @@ function install_proprietary_binaries() {
     if ! which ${line} > /dev/null 2>&1; then
       bin="/usr/bin/${line}"
       echo "Installing ${line} ..."
-      curl -sLko "${bin}" "https://github.com/BootLoopLover/libernet-proprietary/raw/main/${ARCH}/binaries/${line}"
+      curl -sLko "${bin}" "https://github.com/dotywrt/libernet-proprietary/raw/main/${ARCH}/binaries/${line}"
       chmod +x "${bin}"
     fi
   done < binaries.txt
@@ -45,7 +45,7 @@ function install_proprietary_packages() {
     if ! which ${line} > /dev/null 2>&1; then
       pkg="/tmp/${line}.ipk"
       echo "Installing ${line} ..."
-      curl -sLko "${pkg}" "https://github.com/BootLoopLover/libernet-proprietary/raw/main/${ARCH}/packages/${line}.ipk"
+      curl -sLko "${pkg}" "https://github.com/dotywrt/libernet-proprietary/raw/main/${ARCH}/packages/${line}.ipk"
       opkg install "${pkg}"
       rm -rf "${pkg}"
     fi
