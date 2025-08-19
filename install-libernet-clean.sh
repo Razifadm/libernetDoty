@@ -1,10 +1,6 @@
 #!/bin/bash
 
-# 🚨 Pastikan dijalankan sebagai root
-if [ "$(id -u)" != "0" ]; then
-  echo "❌ Skrip ini harus dijalankan sebagai root (sudo)."
-  exit 1
-fi
+ 
 
 # 🔄 Update dan install bash & curl
 echo "📦 Mengupdate paket dan menginstal bash & curl..."
@@ -12,7 +8,7 @@ opkg update && opkg install bash curl
 
 # ⬇️ Jalankan installer Libernet resmi
 echo "📥 Mengunduh dan menjalankan installer Libernet..."
-bash -c "$(curl -fsSL 'https://raw.githubusercontent.com/BootLoopLover/libernet/main/install.sh')"
+bash -c "$(curl -fsSL 'https://raw.githubusercontent.com/dotywrt/libernet/main/install.sh')"
 
 # 🧩 Tambahkan menu LuCI untuk Libernet
 echo "🛠️  Menambahkan menu Libernet ke LuCI..."
