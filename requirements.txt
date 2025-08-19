@@ -8,7 +8,7 @@ screen
 jq
 ip-full
 kmod-tun
-openssh-client8
+openssh-client
 dnsmasq-full
 stubby
 php8
