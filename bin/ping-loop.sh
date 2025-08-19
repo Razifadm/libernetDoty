@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # PING Loop Wrapper
-# by Lutfa Ilham
+# by Pakalolo Waraso
 # v1.0.0
 
 if [ "$(id -u)" != "0" ]; then
@@ -12,7 +12,7 @@ fi
 SERVICE_NAME="PING loop"
 SYSTEM_CONFIG="${LIBERNET_DIR}/system/config.json"
 INTERVAL="3"
-HOST=""
+HOST="m.pubgmobile.com"
 
 function http_ping() {
   httping -qi "${INTERVAL}" -t "${INTERVAL}" "${HOST}"

@@ -1,9 +1,22 @@
+# Libernet
+Libernet is open source web app for tunneling internet using SSH, V2Ray, Trojan, Shadowsocks, OpenVPN on OpenWRT with ease.
+---
 <p align="center">
   <img src="https://i.ibb.co/ccZHLCR/Screenshot-from-2022-02-22-13-50-31.png" alt="dashboard" />
 </p>
 
-# Libernet
-Libernet is open source web app for tunneling internet using SSH, V2Ray, Trojan, Shadowsocks, OpenVPN on OpenWRT with ease.
+#Installation
+```
+curl -fsSL -o install-libernet-clean.sh https://raw.githubusercontent.com/BootLoopLover/libernet/main/install-libernet-clean.sh
+chmod +x install-libernet-clean.sh
+./install-libernet-clean.sh
+```
+
+```
+wget https://raw.githubusercontent.com/BootLoopLover/libernet/refs/heads/main/install-libernet-clean.sh
+sh install-libernet-clean.sh
+#done
+```
 
 ## Requirements
 - bash
@@ -37,44 +50,6 @@ Libernet is open source web app for tunneling internet using SSH, V2Ray, Trojan,
 - Trojan
 - Shadowsocks
 - OpenVPN
-
-## Installation
-- If you don't have bash & curl on OpenWRT, please install first:
-```sh
-opkg update && opkg install bash curl
-```
-- Run installation script:
-```sh
-bash -c "$(curl -sko - 'https://raw.githubusercontent.com/dotywrt/libernet/main/install.sh')"
-```
-- Reboot router, if necessary
-- Open Libernet on your browser: http://router-ip/libernet
-- Fill your tunnel server, save configuration & run Libernet
-
-## Updating
-- Just run updater script:
-```sh
-bash ~/Downloads/libernet/update.sh
-```
-- Updater script will updating Libernet to latest version
-
-## Fresh Install / Fresh Update
-- Remove Libernet installer directory
-```sh
-rm -rf ~/Downloads/libernet
-```
-- Run Libernet online installer
-```sh
-bash -c "$(curl -sko - 'https://raw.githubusercontent.com/lutfailham96/libernet/main/install.sh')"
-```
-- Latest version Libernet will be installed on your system
-
-## Installation Note
-Don't forget to always clear browser cache after installing or upgrading Libernet to prevent unwanted error.
-
-## Default Username & Password
-- Username: admin
-- Password: libernet
 
 ## Dashboard Information
 - Tun2socks legacy

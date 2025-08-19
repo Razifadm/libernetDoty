@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # HTTP Injector for Python3
-# modded by Lutfa Ilham
+# modded by Pakalolo Waraso
 # v1.0.0
 # credit: https://github.com/mientz/python-http-injector
 

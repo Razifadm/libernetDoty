@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # Libernet Updater
-# by Lutfa Ilham
+# by Pakalolo Waraso
 # v1.0.0
 
 HOME="/root"
 DOWNLOADS_DIR="${HOME}/Downloads"
 LIBERNET_TMP="${DOWNLOADS_DIR}/libernet"
-REPOSITORY_URL="git://github.com/lutfailham96/libernet.git"
+REPOSITORY_URL="git://github.com/BootLoopLover/libernet.git"
 
 function update_libernet() {
   if [[ ! -d "${LIBERNET_TMP}" ]]; then

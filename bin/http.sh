@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # HTTP Proxy Wrapper
-# by Lutfa Ilham
+# by Pakalolo Waraso
 # v1.0.0
 
 if [ "$(id -u)" != "0" ]; then

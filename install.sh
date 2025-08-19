@@ -1,9 +1,8 @@
 #!/bin/bash
 
 # Libernet Installer
-# by Lutfa Ilham
+# by Pakalolo Waraso
 # v1.0.0
-# Modified by TEB
 
 if [ "$(id -u)" != "0" ]; then
   echo "This script must be run as root" 1>&2
@@ -17,52 +16,13 @@ LIBERNET_WWW="/www/libernet"
 STATUS_LOG="${LIBERNET_DIR}/log/status.log"
 DOWNLOADS_DIR="${HOME}/Downloads"
 LIBERNET_TMP="${DOWNLOADS_DIR}/libernet"
-REPOSITORY_URL="https://github.com/pru79/libernet"
-
-function run_patch_script() {
-    echo -e "\nRunning patch script to disable authentication..."
-    
-    # Find files containing the target lines and store them in a variable
-    files=$(grep -lE "include\('auth.php'\)|check_session\(\)" /www/libernet/* 2>/dev/null)
-
-    # Check if any files were found
-    if [ -z "$files" ]; then
-        echo "No files containing auth patterns found."
-        return 0
-    fi
-
-    # Display the list of files being modified
-    echo "Disabling auth code from:"
-    echo "$files" | sed 's/^/  /'
-    echo
-
-    # Iterate over each file
-    for file in $files; do
-        # Make a backup of the original file
-        cp "$file" "$file.bak"
-
-        # Use sed to comment out the lines
-        sed -i -e "/include('auth.php')/s/^/# /" \
-               -e "/check_session()/s/^/# /" "$file"
-
-        echo "Updated: $file"
-    done
-
-    echo "Done. Original files were backed up with .bak extension."
-}
+REPOSITORY_URL="https://github.com/BootLoopLover/libernet"
 
 function install_packages() {
   while IFS= read -r line; do
+    # install package if not installed yet
     if [[ $(opkg list-installed "${line}" | grep -c "${line}") != "1" ]]; then
-      if [[ "${line}" == "dnsmasq" ]]; then
-        if [[ $(opkg list-installed dnsmasq-full | grep -c dnsmasq-full) != "1" ]]; then
-          opkg install "${line}"
-        else
-          echo "dnsmasq-full is already installed, skipping dnsmasq."
-        fi
-      else
-        opkg install "${line}"
-      fi
+      opkg install "${line}"
     fi
   done < requirements.txt
 }
@@ -73,7 +33,7 @@ function install_proprietary_binaries() {
     if ! which ${line} > /dev/null 2>&1; then
       bin="/usr/bin/${line}"
       echo "Installing ${line} ..."
-      curl -sLko "${bin}" "https://github.com/pru79/libernet-proprietary/raw/main/${ARCH}/binaries/${line}"
+      curl -sLko "${bin}" "https://github.com/BootLoopLover/libernet-proprietary/raw/main/${ARCH}/binaries/${line}"
       chmod +x "${bin}"
     fi
   done < binaries.txt
@@ -85,7 +45,7 @@ function install_proprietary_packages() {
     if ! which ${line} > /dev/null 2>&1; then
       pkg="/tmp/${line}.ipk"
       echo "Installing ${line} ..."
-      curl -sLko "${pkg}" "https://github.com/pru79/libernet-proprietary/raw/main/${ARCH}/packages/${line}.ipk"
+      curl -sLko "${pkg}" "https://github.com/BootLoopLover/libernet-proprietary/raw/main/${ARCH}/packages/${line}.ipk"
       opkg install "${pkg}"
       rm -rf "${pkg}"
     fi
@@ -98,6 +58,7 @@ function install_proprietary() {
 }
 
 function install_prerequisites() {
+  # update packages index
   opkg update
 }
 
@@ -129,17 +90,18 @@ function add_libernet_environment() {
 }
 
 function install_libernet() {
+  # stop Libernet before install
   if [[ -f "${LIBERNET_DIR}/bin/service.sh" && $(cat "${STATUS_LOG}") != "0" ]]; then
     echo -e "Stopping Libernet"
     "${LIBERNET_DIR}/bin/service.sh" -ds > /dev/null 2>&1
   fi
+  # removing directories that might contains garbage
   rm -rf "${LIBERNET_WWW}"
+  # install Libernet
   echo -e "Installing Libernet" \
     && mkdir -p "${LIBERNET_DIR}" \
     && echo -e "Copying updater script" \
     && cp -avf update.sh "${LIBERNET_DIR}/" \
-    && sed -i "s/^HOST=\".*\"/HOST=\"$bughost\"/" bin/ping-loop.sh \
-    && echo "Ping target set to: $bughost" \
     && echo -e "Copying binary" \
     && cp -arvf bin "${LIBERNET_DIR}/" \
     && echo -e "Copying system" \
@@ -172,15 +134,21 @@ function configure_libernet_firewall() {
       && uci add firewall forwarding \
       && uci set firewall.@forwarding[-1].src='lan' \
       && uci set firewall.@forwarding[-1].dest='libernet' \
-      && uci commit
+      && uci commit \
+      && /etc/init.d/network restart
   fi
 }
 
 function configure_libernet_service() {
   echo -e "Configuring Libernet service"
+  # disable services startup
+  # DoT
   /etc/init.d/stubby disable
+  # shadowsocks
   /etc/init.d/shadowsocks-libev disable
+  # openvpn
   /etc/init.d/openvpn disable
+  # stunnel
   /etc/init.d/stunnel disable
 }
 
@@ -197,7 +165,6 @@ function setup_system_logs() {
 function finish_install() {
   router_ip="$(ifconfig br-lan | grep 'inet addr:' | awk '{print $2}' | awk -F ':' '{print $2}')"
   echo -e "Libernet successfully installed!\nLibernet URL: http://${router_ip}/libernet"
-  run_patch_script
 }
 
 function main_installer() {
@@ -208,85 +175,31 @@ function main_installer() {
     && configure_libernet_firewall \
     && configure_libernet_service \
     && setup_system_logs \
-    && finish_install \
-    && teb_mod \
-    && restart_net
-}
-
-function restart_net() {
-# Prompt user for network restart
-read -p "Restart network now? (Default: Yes) [Y/n] " response
-
-# Convert response to lowercase for case-insensitive comparison
-response_lower=${response,,}
-
-# If empty (user pressed Enter) or 'y', restart network
-if [[ -z "$response" || "$response_lower" == "y" ]]; then
-    echo "Restarting network..."
-    /etc/init.d/network restart
-else
-    echo "Skipping network restart."
-fi
-}
-
-function teb_mod() {
-  mkdir -p /usr/lib/lua/luci/controller
-  cat <<'EOF' >/usr/lib/lua/luci/controller/libernet.lua
-module("luci.controller.libernet", package.seeall)
-function index()
-entry({"admin","services","libernet"}, template("libernet"), _("Libernet"), 55).leaf=true
-end
-EOF
-  mkdir -p /usr/lib/lua/luci/view
-  cat <<'EOF' >/usr/lib/lua/luci/view/libernet.htm
-<%+header%>
-<div class="cbi-map">
-<iframe id="libernet" style="width: 100%; min-height: 650px; border: none; border-radius: 2px;"></iframe>
-</div>
-<script type="text/javascript">
-document.getElementById("libernet").src = "http://" + window.location.hostname + "/libernet";
-</script>
-<%+footer%>
-EOF
+    && finish_install
 }
 
 function main() {
+  # install git if it's unavailable
   if [[ $(opkg list-installed git | grep -c git) != "1" ]]; then
-    opkg update && opkg install git
+    opkg update \
+      && opkg install git
   fi
   if [[ $(opkg list-installed git-http | grep -c git-http) != "1" ]]; then
-    opkg update && opkg install git-http
+    opkg update \
+      && opkg install git-http
   fi
+  # create ~/Downloads directory if not exist
   if [[ ! -d "${DOWNLOADS_DIR}" ]]; then
     mkdir -p "${DOWNLOADS_DIR}"
   fi
-
+  # install Libernet
   if [[ ! -d "${LIBERNET_TMP}" ]]; then
-    if git clone --depth 1 "${REPOSITORY_URL}" "${LIBERNET_TMP}" && cd "${LIBERNET_TMP}"; then
-        echo
-        read -rp "Please enter your bug host to ping infinitely [default: www.speedtest.net]: " bughost
-        
-        if [[ -z "$bughost" ]]; then
-            bughost="www.speedtest.net"
-            echo "Using default ping target: $bughost"
-        fi
-
-        main_installer
-    else
-        echo "Error: Failed to clone repository or enter directory"
-        exit 1
-    fi
+    git clone --depth 1 "${REPOSITORY_URL}" "${LIBERNET_TMP}" \
+      && cd "${LIBERNET_TMP}" \
+      && bash install.sh
   else
-    cd "${LIBERNET_TMP}"
-    echo
-    read -rp "Please enter your bug host to ping infinitely [default: www.speedtest.net]: " bughost
-    
-    if [[ -z "$bughost" ]]; then
-        bughost="www.speedtest.net"
-        echo "Using default ping target: $bughost"
-    fi
-    
-    main_installer
+    cd "${LIBERNET_TMP}" \
+      && main_installer
   fi
 }
 
