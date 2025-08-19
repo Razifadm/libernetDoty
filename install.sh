@@ -115,27 +115,29 @@ function install_libernet() {
     && sed -i "s/LIBERNET_DIR/$(echo ${LIBERNET_DIR} | sed 's/\//\\\//g')/g" "${LIBERNET_WWW}/config.inc.php"
 }
 
-function configure_libernet_firewall() {
-  if ! uci get network.libernet > /dev/null 2>&1; then
-    echo "Configuring Libernet firewall" \
-      && uci set network.libernet=interface \
-      && uci set network.libernet.proto='none' \
-      && uci set network.libernet.ifname='tun1' \
-      && uci commit \
-      && uci add firewall zone \
-      && uci set firewall.@zone[-1].network='libernet' \
-      && uci set firewall.@zone[-1].name='libernet' \
-      && uci set firewall.@zone[-1].masq='1' \
-      && uci set firewall.@zone[-1].mtu_fix='1' \
-      && uci set firewall.@zone[-1].input='REJECT' \
-      && uci set firewall.@zone[-1].forward='REJECT' \
-      && uci set firewall.@zone[-1].output='ACCEPT' \
-      && uci commit \
-      && uci add firewall forwarding \
-      && uci set firewall.@forwarding[-1].src='lan' \
-      && uci set firewall.@forwarding[-1].dest='libernet' \
-      && uci commit \
-      && /etc/init.d/network restart
+configure_vpntunnel_firewall() {
+  if ! uci get network.vpntunnel > /dev/null 2>&1; then
+    uci set network.vpntunnel='interface'
+    uci set network.vpntunnel.proto='none'
+    uci set network.vpntunnel.device='tun1'
+    uci commit network
+
+    uci add firewall zone
+    uci set firewall.@zone[-1].name='vpntunneltunnel'
+    uci set firewall.@zone[-1].network='vpntunnel'
+    uci set firewall.@zone[-1].masq='1'
+    uci set firewall.@zone[-1].mtu_fix='1'
+    uci set firewall.@zone[-1].input='REJECT'
+    uci set firewall.@zone[-1].forward='REJECT'
+    uci set firewall.@zone[-1].output='ACCEPT'
+    uci commit firewall
+
+    uci add firewall forwarding
+    uci set firewall.@forwarding[-1].src='lan'
+    uci set firewall.@forwarding[-1].dest='vpntunneltunnel'
+    uci commit firewall
+
+    /etc/init.d/firewall restart
   fi
 }
 
@@ -172,7 +174,7 @@ function main_installer() {
     && install_libernet \
     && add_libernet_environment \
     && enable_uhttp_php \
-    && configure_libernet_firewall \
+    && configure_vpntunnel_firewall \
     && configure_libernet_service \
     && setup_system_logs \
     && finish_install
