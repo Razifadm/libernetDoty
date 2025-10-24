@@ -12,7 +12,7 @@ openssh-client
 dnsmasq-full
 stubby
 php8
-php8-cgi 
+php8-cgi
 php8-mod-session
 python3
 httping
