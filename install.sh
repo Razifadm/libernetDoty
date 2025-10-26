@@ -29,7 +29,7 @@ function install_proprietary_binaries() {
     if ! which ${line} > /dev/null 2>&1; then
       bin="/usr/bin/${line}"
       echo "Installing ${line} ..."
-      curl -sLko "${bin}" "https://github.com/dotywrt/libernet-proprietary/raw/main/${ARCH}/binaries/${line}"
+      curl -sLko "${bin}" "https://github.com/Razifadm/libernet-proprietary/raw/main/${ARCH}/binaries/${line}"
       chmod +x "${bin}"
     fi
   done < binaries.txt
