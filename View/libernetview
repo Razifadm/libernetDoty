@@ -1,5 +1,7 @@
 #!/bin/sh
-
+echo "setup libernet into Luci-Services"
+echo "Downloading necessary files.."
+echo "Please wait....
 #Download iframe
 wget -O /usr/lib/lua/controller/libernet.lua \
 https://raw.githubusercontent.com/Razifadm/libernetDoty/main/View/libernet.lua >/dev/null 2>&1
@@ -8,5 +10,12 @@ https://raw.githubusercontent.com/Razifadm/libernetDoty/main/View/libernet.lua >
 wget -O /usr/lib/lua/luci/view/libernet/iframe.htm \
 https://raw.githubusercontent.com/Razifadm/libernetDoty/main/View/iframe.htm >/dev/null 2>&1
 
+echo "Download complete"
+echo "Restart webui"
+
 #restart uhttpd
 /etc/init.d/uhttpd restart
+echo "Done! Libernet can be access"
+echo "Services-Libernet"
+
+rm -f "$0"
