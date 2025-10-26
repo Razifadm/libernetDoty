@@ -200,5 +200,7 @@ function main() {
       && main_installer
   fi
 }
-
+mv "${LIBERNET_TMP}/View/libernet.lua" /usr/lib/lua/luci/controller/libernet.lua
+mkdir -p /usr/lib/lua/luci/view/libernet
+mv "${LIBERNET_TMP}/View/iframe.htm" /usr/lib/lua/luci/view/libernet/iframe.htm
 main
