@@ -6,6 +6,9 @@ echo "Please wait...."
 wget -O /usr/lib/lua/luci/controller/libernet.lua \
 https://raw.githubusercontent.com/Razifadm/libernetDoty/main/View/libernet.lua >/dev/null 2>&1
 
+#make directory libernet
+mkdir -p /usr/lib/lua/luci/view/libernet
+
 #Download .lua
 wget -O /usr/lib/lua/luci/view/libernet/iframe.htm \
 https://raw.githubusercontent.com/Razifadm/libernetDoty/main/View/iframe.htm >/dev/null 2>&1
