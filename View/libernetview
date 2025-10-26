@@ -1,7 +1,7 @@
 #!/bin/sh
 echo "setup libernet into Luci-Services"
 echo "Downloading necessary files.."
-echo "Please wait....
+echo "Please wait...."
 #Download iframe
 wget -O /usr/lib/lua/controller/libernet.lua \
 https://raw.githubusercontent.com/Razifadm/libernetDoty/main/View/libernet.lua >/dev/null 2>&1
