@@ -1,3 +1,12 @@
+#!/bin/sh
+
 #Download iframe
+wget -O /usr/lib/lua/controller/libernet.lua \
+https://raw.githubusercontent.com/Razifadm/libernetDoty/main/View/libernet.lua >/dev/null 2>&1
 
 #Download .lua
+wget -O /usr/lib/lua/luci/view/libernet/iframe.htm \
+https://raw.githubusercontent.com/Razifadm/libernetDoty/main/View/iframe.htm >/dev/null 2>&1
+
+#restart uhttpd
+/etc/init.d/uhttpd restart
