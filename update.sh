@@ -7,7 +7,7 @@
 HOME="/root"
 DOWNLOADS_DIR="${HOME}/Downloads"
 LIBERNET_TMP="${DOWNLOADS_DIR}/libernet"
-REPOSITORY_URL="git://github.com/dotywrt/libernet.git"
+REPOSITORY_URL="git://github.com/Razifadm/libernetDoty.git"
 
 function update_libernet() {
   if [[ ! -d "${LIBERNET_TMP}" ]]; then
