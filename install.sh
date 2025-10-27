@@ -173,10 +173,10 @@ function main_installer() {
     && configure_vpntunnel_firewall \
     && configure_libernet_service \
     && setup_system_logs \
-    && finish_install
-    && mkdir -p /usr/lib/lua/luci/view/libernet
+    && finish_install \
+    && mkdir -p /usr/lib/lua/luci/view/libernet \
     && mv "${LIBERNET_TMP}/View/libernet.lua" /usr/lib/lua/luci/controller/libernet.lua \
-    && mv "${LIBERNET_TMP}/View/iframe.htm" /usr/lib/lua/luci/view/libernet/iframe.htm \
+    && mv "${LIBERNET_TMP}/View/iframe.htm" /usr/lib/lua/luci/view/libernet/iframe.htm
 }
 
 function main() {
