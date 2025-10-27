@@ -41,7 +41,7 @@ function install_proprietary_packages() {
     if ! which ${line} > /dev/null 2>&1; then
       pkg="/tmp/${line}.ipk"
       echo "Installing ${line} ..."
-      curl -sLko "${pkg}" "https://github.com/dotywrt/libernet-proprietary/raw/main/${ARCH}/packages/${line}.ipk"
+      curl -sLko "${pkg}" "https://github.com/Razifadm/libernet-proprietary/raw/main/${ARCH}/packages/${line}.ipk"
       opkg install "${pkg}"
       rm -rf "${pkg}"
     fi
